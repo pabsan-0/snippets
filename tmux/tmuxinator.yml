@@ -1,0 +1,16 @@
+#! /usr/bin/env -S tmuxinator start -p
+# chmod +x me!
+
+name: latency profiler  
+on_project_start: 
+on_project_exit: killall gst-launch-1.0; tmux kill-session
+windows:
+  - main:
+      layout: even-vertical 
+      panes:
+        - gst-launch-1.0 uridecodebin "uri=rtsp://10.0.3.5:8554/basler3" ! queue ! videoconvert ! videobalance brightness=0.5 contrast=1.5 ! xvimagesink sync=0 async=0
+        - sleep 3; gst-launch-1.0 ximagesrc use-damage=0 ! video/x-raw,framerate=30/1 ! videoconvert ! pngenc snapshot=true ! filesink location=./latency.png  && tmux kill-session
+        # - gst-launch-1.0 -e ximagesrc use-damage=0 ! video/x-raw,framerate=30/1 ! videoconvert ! tee name=teee teee. ! xvimagesink  teee. ! filesink location=./latency.mp4
+        # - gst-launch-1.0 ximagesrc use-damage=0 ! video/x-raw,framerate=30/1 ! videoconvert ! xvimagesink   # raw screen to screen
+        # - while true; do echo -ne `date +"%T.%N"`"\r"; done   # Terminal clock 
+        # - xdg-open https://envyen.com/tools/date/clock-epoch/

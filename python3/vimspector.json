@@ -1,0 +1,17 @@
+{
+  "configurations": {
+    "python3": {
+      "adapter": "debugpy",
+      "configuration": {
+        "request": "launch",
+        "program": "${fileBasename}",
+        "cwd": "${workspaceRoot}",
+        "console": "integratedTerminal",
+        "stopOnEntry": "false",
+        "logging": {
+          "engineLogging": true
+        }
+      }
+    }
+  }
+}
