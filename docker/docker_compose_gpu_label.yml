@@ -1,0 +1,32 @@
+services:
+    my-app: &my-app
+        image: my-app
+        container_name: my-app 
+        build:
+          dockerfile: ./Dockerfile
+        shm_size: 64gb
+        network_mode: host
+        working_dir: /host
+        volumes:
+            - $PWD:/host
+              # Share ultralytics default config to silence warnings
+            - $PWD/assets/ultralytics/:/root/.config/Ultralytics
+        devices:
+            - /dev/video0:/dev/video0
+        runtime: nvidia
+        entrypoint: ["/host/main.py"]
+        command:
+        deploy:
+            resources:
+                reservations:
+                    devices:
+                        - driver: nvidia
+                          count: 1
+                          capabilities: [gpu]
+
+    my-app-test:
+        <<: *my-app
+        volumes:
+            - $PWD:/host
+            - $PWD/main.py:/host/test/main.py
+        entrypoint: ["pytest", "/host/test/test.py"]
