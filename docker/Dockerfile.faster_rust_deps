@@ -1,0 +1,9 @@
+# Bake dependencies in this layer for faster recompilations on changed files
+COPY Cargo.toml ./
+RUN mkdir src                            \
+    && echo "fn main() {}" > src/main.rs \
+    && cargo build --release             ;
+
+# Copy project and ensure main is newer than stub introduced above
+COPY . .
+RUN touch src/main.rs && cargo build --release

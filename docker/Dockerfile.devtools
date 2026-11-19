@@ -1,0 +1,4 @@
+ARG DEVELOPER_TOOLS=1
+RUN if [ ${DEVELOPER_TOOLS} = 1 ]; then                                                  \
+        apt update && apt install -y vim tmux tmuxinator && rm -rf /var/lib/apt/lists/*; \
+    fi                                                                                   ;

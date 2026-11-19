@@ -1,0 +1,19 @@
+FROM ubuntu:24.04
+
+ARG CLEAN_ARTIFACTS=1
+
+RUN --mount=type=ssh                                            \
+    git clone --depth=1                                         \
+        https://gitlab.freedesktop.org/gstreamer/gst-plugins-rs \
+        gst-plugins-rs                                          \
+    && cd gst-plugins-rs                                        \
+    && cargo build --release                                    \
+        -p gst-plugin-audioparsers                              \
+        -p gst-plugin-webrtc                                    \
+        -p gst-plugin-gtk4                                      \
+    && cp                                                       \
+        target/release/libgstrsaudioparsers.so                  \
+        target/release/libgstrswebrtc.so                        \
+        target/release/libgstgtk4.so                            \
+        /usr/local/lib/x86_64-linux-gnu/gstreamer-1.0/          \
+    && if [ ${CLEAN_ARTIFACTS} = 1 ]; then rm -rf target; fi    ;

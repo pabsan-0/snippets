@@ -1,0 +1,27 @@
+#! /usr/bin/env -S tmuxinator start -p
+# chmod +x me!
+
+<% dump_dir = "/tmp/fluendo/nvr/diag/#{Time.now.strftime('%Y%m%d_%H%M%S')}" %>
+
+name: my_tmux_session
+on_project_start: |
+    # Startup tasks
+    set -x
+    # FOOBAR
+    set +x
+
+    # Cleanup hook install
+    nohup bash -c "
+      until tmux has-session -t my_tmux_session 2>/dev/null; do sleep 1; done;
+      while tmux has-session -t my_tmux_session 2>/dev/null; do sleep 2; done;
+        # TODO
+    " >/dev/null 2>&1 &
+
+windows:
+  - win:
+      layout: even-horizontal
+      panes:
+         - DUMP_DIR=<%= dump_dir %> FOO DUMP_DIR
+         - |
+           FOO
+           BAR
